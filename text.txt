@@ -1,0 +1,36 @@
+Альтернативный способ: загрузка внешних изображений
+Если вы хотите использовать реальные PNG-файлы, сделайте следующее:
+
+Нарисуйте трёх человечков в любом графическом редакторе (размер 50×50 пикселей, фон прозрачный). Сохраните как:
+
+assets/images/player_blue.png
+
+assets/images/player_red.png
+
+assets/images/player_green.png
+
+В player.py измените __init__:
+
+python
+def __init__(self, lane_idx=1, character_type='blue'):
+    self.image = pygame.image.load(f"assets/images/player_{character_type}.png").convert_alpha()
+    self.image = pygame.transform.scale(self.image, (PLAYER_WIDTH, PLAYER_HEIGHT))
+    self.rect = self.image.get_rect()
+    ...
+def draw(self, screen):
+    screen.blit(self.image, self.rect)
+Пример создания спрайтов программно (сохранение в файлы)
+Если вы хотите сгенерировать PNG-файлы прямо из кода (чтобы потом их использовать), вот скрипт:
+
+python
+# generate_sprites.py
+import pygame
+from player import Player  # временно используем наш класс
+pygame.init()
+
+for color, char_type in [(BLUE,'blue'), (RED,'red'), (GREEN,'green')]:
+    # Создаём поверхность
+    surf = pygame.Surface((PLAYER_WIDTH, PLAYER_HEIGHT), pygame.SRCALPHA)
+    # Рисуем человечка на surf (адаптируем метод draw_character для работы с surf)
+    # ... (код рисования)
+    pygame.image.save(surf, f"assets/images/player_{char_type}.png")
